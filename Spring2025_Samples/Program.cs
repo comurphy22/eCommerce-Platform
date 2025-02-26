@@ -1,130 +1,319 @@
-﻿//// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-using Library.eCommerce.Services;
-using Spring2025_Samples.Models;
-using System;
-using System.Xml.Serialization;
-
-namespace MyApp
+public class Program
 {
-    internal class Program
+    // Product class to handle details
+    public class Product
     {
-        static void Main(string[] args)
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; } // Available quantity in inventory
+    }
+
+    // Shopping cart item class for tracking quantities in the cart
+    public class CartItem
+    {
+        public Product Product { get; set; }
+        public int Quantity { get; set; } // Quantity for this item in the cart
+    }
+
+    static void Main(string[] args)
+    {
+        // Inventory and shopping cart collections
+        var inventory = new List<Product>();
+        var cart = new List<CartItem>();
+
+        bool running = true;
+
+        while (running)
         {
-
-            Console.WriteLine("Welcome to Amazon!");
-
-            Console.WriteLine("C. Create new inventory item");
-            Console.WriteLine("R. Read all inventory items");
-            Console.WriteLine("U. Update an inventory item");
-            Console.WriteLine("D. Delete an inventory item");
-            Console.WriteLine("Q. Quit");
-
-            List<Product?> inventory = ProductServiceProxy.Current.Products;
-            List<Product?> cart = new List<Product?>();
+            // Main menu
+            Console.WriteLine("\nWelcome to Amazon!\n");
+            Console.WriteLine("Select an option:");
+            Console.WriteLine("1. Create a new item (or add an item from inventory to the shopping cart)");
+            Console.WriteLine("2. Read all items in the inventory or shopping cart");
+            Console.WriteLine("3. Update product details in inventory (or change quantity in shopping cart)");
+            Console.WriteLine("4. Delete an item from inventory (or return items from shopping cart to inventory)");
+            Console.WriteLine("5. Quit and checkout");
+            Console.Write("\nChoose an option: ");
             
-            char choice;
-            int selection = -1;
-            do
+            var choice = Console.ReadLine();
+
+            switch (choice)
             {
-                string? input = Console.ReadLine();
-                choice = input[0];
-                switch (choice)
-                {
-                    case 'C':
-                    case 'c':
-                        Console.WriteLine("Enter the name of the product to add:");
-                        string productName = Console.ReadLine();
-
-                        // Check if the product already exists in the inventory (case-insensitive check)
-                        var existingProduct = inventory.FirstOrDefault(p => string.Equals(p?.Name, productName, StringComparison.OrdinalIgnoreCase));
-
-                        if (existingProduct == null)
-                        {
-                            // Product doesn't exist, so add it to the inventory
-                            var debugInventoryCountBefore = inventory.Count; // Debugging
-        
-                            var newProduct = new Product { Name = productName };
-                            ProductServiceProxy.Current.AddOrUpdate(newProduct);
-                            inventory.Add(newProduct);
-
-                            Console.WriteLine($"Debug: Added {productName} | Count before: {debugInventoryCountBefore}, after: {inventory.Count}");  // Debugging
-                            Console.WriteLine($"Product '{productName}' added to the inventory.");
-                            existingProduct = newProduct; // Assign the newly created product
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Product '{productName}' already exists in the inventory.");
-                        }
-
-                        // Allow adding multiple of the product to the shopping cart
-                        Console.WriteLine("Would you like to add this product to the shopping cart? (Y/N)");
-                        string response = Console.ReadLine()?.ToUpper();
-                        if (response == "Y" || response == "YES")
-                        {
-                            cart.Add(existingProduct); // Allow duplicates in the cart
-                            Console.WriteLine($"Product '{productName}' added to the shopping cart.");
-                        }
-                        break;
-                    case 'R':
-                    case 'r':  
-                        Console.WriteLine("Would you like to read from the shopping cart or the inventory? (C/I)");
-                        response = Console.ReadLine();
-                        if (response.ToUpper() == "C")
-                        {
-                            cart.ForEach(Console.WriteLine);
-                        }
-                        else if (response.ToUpper() == "I")
-                        {
-                            inventory.ForEach(Console.WriteLine);
-                        }
-                        break;
-                    case 'U':
-                    case 'u': //Update the product details in the inventory (or the number of items in the shopping cart)
-                        //select one of the products
-                        Console.WriteLine("Would you like to update the number of items in the shopping cart (1) or the product details in the inventory (2) ?");
-                        string? answer = Console.ReadLine();
-                        if (answer.ToUpper() == "1")
-                        {
-                            //update the number of items in the shopping cart
-                        }
-                        else if (answer.ToUpper() == "2")
-                        {
-                            //update the product details in the inventory
-                            Console.WriteLine("Which product would you like to update?");
-                            selection = int.Parse(Console.ReadLine() ?? "-1");
-                            var selectedProdInv = inventory.FirstOrDefault(p => p.Id == selection); //find the product in the inventory
-
-                            if(selectedProdInv != null)
-                            {
-                                selectedProdInv.Name = Console.ReadLine() ?? "ERROR";
-                                ProductServiceProxy.Current.AddOrUpdate(selectedProdInv);
-                            }
-                        }
-                        else
-                            Console.WriteLine("Error: Unknown Command");
-                        break;
-                    case 'D':
-                    case 'd':   //Need to add feature that returns all product of a given type from the shopping cart to the inventory
-                        //select one of the products
-                        //throw it away
-                        Console.WriteLine("Which product would you like to update?");
-                        selection = int.Parse(Console.ReadLine() ?? "-1");
-                        ProductServiceProxy.Current.Delete(selection);
-                        break;
-                    case 'Q':
-                    case 'q':
-                        break;
-                    default:
-                        Console.WriteLine("Error: Unknown Command");
-                        break;
-                }
-            } while (choice != 'Q' && choice != 'q');
-
-            Console.ReadLine();
+                case "1":
+                    CreateProductOrCart(inventory, cart);
+                    break;
+                case "2":
+                    ReadItems(inventory, cart);
+                    break;
+                case "3":
+                    UpdateItems(inventory, cart);
+                    break;
+                case "4":
+                    DeleteItems(inventory, cart);
+                    break;
+                case "5":
+                    running = false;
+                    Checkout(cart);
+                    break;
+                default:
+                    Console.WriteLine("Invalid option. Please try again.");
+                    break;
+            }
         }
     }
 
+    // Case 1: Create a new item or add an item from inventory to the cart
+    private static void CreateProductOrCart(List<Product> inventory, List<CartItem> cart)
+    {
+        Console.WriteLine("\nWould you like to add an item to (1) Inventory or (2) Shopping Cart?");
+        var option = Console.ReadLine();
 
+        if (option == "1")
+        {
+            // Add new item to inventory
+            Console.Write("Enter the name of the product: ");
+            var name = Console.ReadLine();
+
+            Console.Write("Enter the price of the product: ");
+            if (!decimal.TryParse(Console.ReadLine(), out var price) || price <= 0)
+            {
+                Console.WriteLine("Invalid price. Operation canceled.");
+                return;
+            }
+
+            Console.Write("Enter the available quantity: ");
+            if (!int.TryParse(Console.ReadLine(), out var quantity) || quantity <= 0)
+            {
+                Console.WriteLine("Invalid quantity. Operation canceled.");
+                return;
+            }
+
+            // Check if an item by this name already exists in inventory
+            var existingProduct = inventory.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (existingProduct != null)
+            {
+                Console.WriteLine($"Product '{name}' already exists in inventory. Updating quantity!");
+                existingProduct.Quantity += quantity;
+            }
+            else
+            {
+                inventory.Add(new Product { Name = name, Price = price, Quantity = quantity });
+                Console.WriteLine($"Product '{name}' added to inventory.");
+            }
+        }
+        else if (option == "2")
+        {
+            // Add item to shopping cart
+            Console.Write("Enter the name of the product to add to the cart: ");
+            var name = Console.ReadLine();
+
+            var product = inventory.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (product == null)
+            {
+                Console.WriteLine($"Product '{name}' not found in inventory.");
+                return;
+            }
+
+            Console.Write($"Enter the quantity to add (Available: {product.Quantity}): ");
+            if (!int.TryParse(Console.ReadLine(), out var cartQuantity) || cartQuantity <= 0)
+            {
+                Console.WriteLine("Invalid quantity. Operation canceled.");
+                return;
+            }
+
+            if (cartQuantity > product.Quantity)
+            {
+                Console.WriteLine("Not enough stock available in inventory.");
+                return;
+            }
+
+            var cartItem = cart.FirstOrDefault(c => c.Product == product);
+            if (cartItem == null)
+            {
+                cart.Add(new CartItem { Product = product, Quantity = cartQuantity });
+            }
+            else
+            {
+                cartItem.Quantity += cartQuantity;
+            }
+
+            product.Quantity -= cartQuantity; // Reduce inventory quantity
+            Console.WriteLine($"Added {cartQuantity} of '{product.Name}' to the cart.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+        }
+    }
+
+    // Case 2: Read items from inventory or shopping cart
+    private static void ReadItems(List<Product> inventory, List<CartItem> cart)
+    {
+        Console.WriteLine("\nWould you like to read from (1) Inventory or (2) Shopping Cart?");
+        var option = Console.ReadLine();
+
+        if (option == "1")
+        {
+            Console.WriteLine("\nInventory:");
+            foreach (var product in inventory)
+            {
+                Console.WriteLine($"- {product.Name}: ${product.Price:F2} | Quantity: {product.Quantity}");
+            }
+        }
+        else if (option == "2")
+        {
+            Console.WriteLine("\nShopping Cart:");
+            foreach (var item in cart)
+            {
+                Console.WriteLine($"- {item.Product.Name}: ${item.Product.Price:F2} | Quantity: {item.Quantity} | Subtotal: ${item.Product.Price * item.Quantity:F2}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+        }
+    }
+
+    // Case 3: Update items in inventory or shopping cart
+    private static void UpdateItems(List<Product> inventory, List<CartItem> cart)
+    {
+        Console.WriteLine("\nWould you like to update (1) Inventory or (2) Shopping Cart?");
+        var option = Console.ReadLine();
+
+        if (option == "1")
+        {
+            Console.Write("Enter the name of the product to update: ");
+            var name = Console.ReadLine();
+
+            var product = inventory.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (product == null)
+            {
+                Console.WriteLine($"Product '{name}' not found in inventory.");
+                return;
+            }
+
+            Console.Write("Enter the new price: ");
+            if (!decimal.TryParse(Console.ReadLine(), out var price) || price <= 0)
+            {
+                Console.WriteLine("Invalid price. Operation canceled.");
+                return;
+            }
+
+            Console.Write("Enter the new quantity: ");
+            if (!int.TryParse(Console.ReadLine(), out var quantity) || quantity < 0)
+            {
+                Console.WriteLine("Invalid quantity. Operation canceled.");
+                return;
+            }
+
+            product.Price = price;
+            product.Quantity = quantity;
+            Console.WriteLine($"Product '{name}' updated.");
+        }
+        else if (option == "2")
+        {
+            Console.Write("Enter the name of the product to update in the cart: ");
+            var name = Console.ReadLine();
+
+            var cartItem = cart.FirstOrDefault(c => c.Product.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (cartItem == null)
+            {
+                Console.WriteLine($"Product '{name}' not found in the cart.");
+                return;
+            }
+
+            Console.Write($"Enter the new quantity (Current: {cartItem.Quantity}): ");
+            if (!int.TryParse(Console.ReadLine(), out var quantity) || quantity < 0)
+            {
+                Console.WriteLine("Invalid quantity. Operation canceled.");
+                return;
+            }
+
+            var adjustment = quantity - cartItem.Quantity;
+            if (adjustment > cartItem.Product.Quantity)
+            {
+                Console.WriteLine("Not enough stock in inventory.");
+                return;
+            }
+
+            cartItem.Quantity = quantity;
+            cartItem.Product.Quantity -= adjustment; // Adjust inventory
+            Console.WriteLine($"Cart updated. {name}: {quantity} items.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+        }
+    }
+
+    // Case 4: Delete items from inventory or return items to inventory from cart
+    private static void DeleteItems(List<Product> inventory, List<CartItem> cart)
+    {
+        Console.WriteLine("\nWould you like to delete from (1) Inventory or (2) Shopping Cart?");
+        var option = Console.ReadLine();
+
+        if (option == "1")
+        {
+            Console.Write("Enter the name of the product to delete from inventory: ");
+            var name = Console.ReadLine();
+
+            var product = inventory.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (product == null)
+            {
+                Console.WriteLine($"Product '{name}' not found in inventory.");
+                return;
+            }
+
+            inventory.Remove(product);
+            Console.WriteLine($"Product '{name}' removed from inventory.");
+        }
+        else if (option == "2")
+        {
+            Console.Write("Enter the name of the product to return to inventory: ");
+            var name = Console.ReadLine();
+
+            var cartItem = cart.FirstOrDefault(c => c.Product.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (cartItem == null)
+            {
+                Console.WriteLine($"Product '{name}' not found in the cart.");
+                return;
+            }
+
+            cartItem.Product.Quantity += cartItem.Quantity; // Return stock to inventory
+            cart.Remove(cartItem);
+            Console.WriteLine($"Product '{name}' returned to inventory.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+        }
+    }
+
+    // Case 5: Quit and Checkout
+    private static void Checkout(List<CartItem> cart)
+    {
+        Console.WriteLine("\nCheckout:");
+        decimal subtotal = 0;
+        foreach (var item in cart)
+        {
+            var itemTotal = item.Product.Price * item.Quantity;
+            Console.WriteLine($"- {item.Product.Name}: ${item.Product.Price:F2} x {item.Quantity} = ${itemTotal:F2}");
+            subtotal += itemTotal;
+        }
+
+        const decimal taxRate = 0.07m;
+        var tax = subtotal * taxRate;
+        var total = subtotal + tax;
+
+        Console.WriteLine($"\nSubtotal: ${subtotal:F2}");
+        Console.WriteLine($"Tax (7%): ${tax:F2}");
+        Console.WriteLine($"Total: ${total:F2}");
+
+        Console.WriteLine("\nThank you for shopping with Amazon!\n");
+        cart.Clear(); // Empty the cart after checkout
+    }
 }
