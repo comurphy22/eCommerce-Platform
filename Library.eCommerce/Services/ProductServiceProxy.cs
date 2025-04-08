@@ -9,14 +9,10 @@ namespace Library.eCommerce.Services
 {
     public class ProductServiceProxy
     {
-        //singleton pattern:
-        //  only one instance of the class is allowed to exist, and that instance is create    
-        //  and accessed internally.
-        
-            private ProductServiceProxy() //ProductServiceProxy is a singleton, constructor is private
-            {
-                Products = new List<Product?>();    //contains an empty list of products
-            }
+        private ProductServiceProxy()
+        {
+            Products = new List<Product?>();
+        }
 
         private int LastKey
         {
@@ -75,6 +71,11 @@ namespace Library.eCommerce.Services
             Products.Remove(product);
 
             return product;
+        }
+
+        public Product? GetById(int id)
+        {
+            return Products.FirstOrDefault(p => p.Id == id);
         }
 
     }
