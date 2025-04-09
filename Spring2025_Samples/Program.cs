@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Library.eCommerce.Services;
 using Library.eCommerce.Models;
@@ -19,7 +20,7 @@ namespace MyApp
             Console.WriteLine("D. Delete an inventory item");
             Console.WriteLine("Q. Quit");
 
-            List<Product?> list = ProductServiceProxy.Current.Products;
+            List<Item?> list = InventoryServiceProxy.Current.Inventory;
             List<Item> items = ShoppingCartService.Current.CartItems;
             var option = "";
             int selection;
@@ -31,7 +32,11 @@ namespace MyApp
 
                 char choice = input[0];
                 if (choice == 'Q' || choice == 'q')
+                {
+                    ShoppingCartService.Current.Checkout();
                     break;
+                }
+                    
 
                 switch (choice)
                 {
@@ -46,15 +51,25 @@ namespace MyApp
                             var name = Console.ReadLine();
                             Console.WriteLine("Enter product price:");
                             var price = decimal.Parse(Console.ReadLine());
-                            //Console.WriteLine("Enter product quantity:");
-                            //var quantity = int.Parse(Console.ReadLine());
-                            
-                            ProductServiceProxy.Current.AddOrUpdate(new Product
+                            Console.WriteLine("Enter product quantity:");
+                            var quantity = int.Parse(Console.ReadLine());
+
+                            var newItem = new Item
                             {
                                 Name = name,
-                                Price = price,
-                                //Quantity = quantity
-                            });
+                                Product = new Product
+                                {
+                                    Name = name,
+                                    Price = price
+                                },
+                                Quantity = quantity,
+                                //Id = 0
+                            };
+                            var addedItem = InventoryServiceProxy.Current.AddOrUpdate(newItem);
+                            if (addedItem != null)
+                            {
+                                addedItem.Product.Id = addedItem.Id;
+                            }
                         }
                         else if (option == "2")
                         {
@@ -62,18 +77,26 @@ namespace MyApp
                             var productName = Console.ReadLine();
 
                             // Step 1: Find the product in the inventory
-                            var inventoryProduct = ProductServiceProxy.Current.Products
+                            var inventoryItem = InventoryServiceProxy.Current.Inventory
                                 .FirstOrDefault(p => p != null && p.Name != null && p.Name.Equals(productName, StringComparison.OrdinalIgnoreCase));
 
-                            if (inventoryProduct != null)                           
+                            if (inventoryItem != null)                           
                             {
                                 // Step 2: Add it to the cart if it exists in the inventory
-                                var addedItem = ShoppingCartService.Current.AddOrUpdate(new Item
+                                var cartItem = new Item
                                 {
-                                    Id = inventoryProduct.Id,
-                                    Product = inventoryProduct,
+                                    Id = inventoryItem.Id,
+                                    Name = inventoryItem.Name,
+                                    Product = new Product
+                                    {
+                                        Id = inventoryItem.Product.Id,
+                                        Name = inventoryItem.Product.Name,
+                                        Price = inventoryItem.Product.Price
+                                    },
                                     Quantity = 1 // Adding one item to the cart
-                                });
+                                };
+                                
+                                var addedItem = ShoppingCartService.Current.AddOrUpdate(cartItem);
 
                                 if (addedItem != null)
                                 {
@@ -115,7 +138,7 @@ namespace MyApp
                         option = Console.ReadLine();
                         if (option == "1")
                         {
-                            Console.WriteLine("Which product would you like to update?");
+                            Console.WriteLine("Which product would you like to update? (enter id)");
                             selection = int.Parse(Console.ReadLine() ?? "-1");
                             var selectedProd = list.FirstOrDefault(p => p.Id == selection);
 
@@ -123,7 +146,7 @@ namespace MyApp
                             {
                                 Console.WriteLine("Enter new name:");
                                 selectedProd.Name = Console.ReadLine() ?? "ERROR";
-                                ProductServiceProxy.Current.AddOrUpdate(selectedProd);
+                                InventoryServiceProxy.Current.AddOrUpdate(selectedProd);
                                 Console.WriteLine("Updated item");
                             }
                             else
@@ -158,22 +181,19 @@ namespace MyApp
                         option = Console.ReadLine();
                         if (option == "1")
                         {
-                            Console.WriteLine("Which product would you like to delete?");
+                            Console.WriteLine("Which product would you like to delete? (enter id)");
                             selection = int.Parse(Console.ReadLine() ?? "-1");
-                            ProductServiceProxy.Current.Delete(selection);
+                            InventoryServiceProxy.Current.Delete(selection);
                             Console.WriteLine("Deleted item");
                         }
                         else if (option == "2")
                         {
-                            Console.WriteLine("Which product would you like to delete?");
+                            Console.WriteLine("Which product would you like to delete? (enter id)");
                             selection = int.Parse(Console.ReadLine() ?? "-1");
                             var selectedProd = items.FirstOrDefault(p => p.Id == selection);
-                            ShoppingCartService.Current.ReturnItem(selectedProd);
-                            Console.WriteLine("Deleted item");
-                            //items.Remove(items.FirstOrDefault(p => p.Id == selection));
-                            //items.ForEach(Console.WriteLine)
+                            ShoppingCartService.Current.ReturnAllItems(selectedProd);
+                            Console.WriteLine("returning all items from cart");
                         }
-                        
                         break;
                     default:
                         Console.WriteLine("Error: Unknown Command");

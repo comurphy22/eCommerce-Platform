@@ -29,21 +29,21 @@ namespace Spring2025_Samples.Models
         
         public Product(Product p)
         {
-            //Id = p.Id;
+            Id = p.Id;
             Name = p.Name;
             Price = p.Price;
         }
 
-        /*public Product(int id, string name, int quantity, decimal price)
+        public Product(int id, string name, decimal? price)
         {
             Id = id;
             Name = name;
             Price = price;
-        }*/
+        }
 
         public override string ToString()
         {
-            return Display ?? string.Empty;
+            return $"{Id}. {Name} - {Price}";
         }
     }
 }

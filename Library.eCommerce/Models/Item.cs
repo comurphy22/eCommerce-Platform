@@ -13,10 +13,9 @@ namespace Library.eCommerce.Models
     public class Item
     {
         public int Id { get; set; }
-        
-        //public string? Name { get; set; }
+        public string Name { get; set; }
         public Product Product { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         //public ICommand? AddCommand { get; set; } UI
 
@@ -36,7 +35,7 @@ namespace Library.eCommerce.Models
         {
             Product = new Product();
             Quantity = 0;
-
+            //Id = 0;
             //AddCommand = new Command(DoAdd); for the UI
         }
         private void DoAdd()
@@ -44,13 +43,23 @@ namespace Library.eCommerce.Models
             ShoppingCartService.Current.AddOrUpdate(this);
         }
 
+        public Item(String name, Product product, int quantity)
+        {
+            Name = name;
+            Id = product.Id;
+            Product = product;
+            Quantity = quantity;
+        }
         public Item(Item i)
         {
-            Product = new Product(i.Product);
+            Product = new Product(i.Product.Id, i.Product.Name, i.Product.Price);
             Quantity = i.Quantity;
             Id = i.Id;
+            //Name = i.Name;
 
             //AddCommand = new Command(DoAdd);
         }
+
+
     }
 }
