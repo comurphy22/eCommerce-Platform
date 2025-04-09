@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.eCommerce.Models;
 
 namespace Library.eCommerce.Services
 {
@@ -50,13 +51,34 @@ namespace Library.eCommerce.Services
 
         public Product AddOrUpdate(Product product)
         {
-            if(product.Id == 0)
+            bool isDuplicateName = Products.Any(p => p.Name == product.Name && p.Id != product.Id);
+            if (isDuplicateName)
+            {
+                Console.WriteLine("Duplicate product name in the inventory.");
+                return null;
+            }
+            if(product.Id == 0) //if product id is 0, add new product
             {
                 product.Id = LastKey + 1;
+                //product.Id = 1;
                 Products.Add(product);
             }
-
-
+            else    //update
+            {
+                var existingProduct = Products.FirstOrDefault(p => p.Id == product.Id);
+                if (existingProduct != null)
+                {
+                    var index = Products.IndexOf(existingProduct);
+                    Products.RemoveAt(index);
+                    Products.Insert(index, product);
+                }
+                else
+                {
+                    Console.WriteLine("Product not found.");
+                    return null;
+                }
+            }
+            
             return product;
         }
 

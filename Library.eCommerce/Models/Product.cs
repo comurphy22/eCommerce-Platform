@@ -9,9 +9,10 @@ namespace Spring2025_Samples.Models
     public class Product
     {
         public int Id { get; set; }
-
         public string? Name { get; set; }
-        public int? Quantity { get; set; }
+        //public int Quantity { get; set;  only for cart items?
+        
+        public decimal? Price { get; set; }
 
         public string? Display
         {
@@ -24,8 +25,21 @@ namespace Spring2025_Samples.Models
         public Product()
         {
             Name = string.Empty;
-            Quantity = 0;
         }
+        
+        public Product(Product p)
+        {
+            //Id = p.Id;
+            Name = p.Name;
+            Price = p.Price;
+        }
+
+        /*public Product(int id, string name, int quantity, decimal price)
+        {
+            Id = id;
+            Name = name;
+            Price = price;
+        }*/
 
         public override string ToString()
         {
