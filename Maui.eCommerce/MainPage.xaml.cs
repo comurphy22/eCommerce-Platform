@@ -11,4 +11,9 @@ public partial class MainPage : ContentPage
     {
         Shell.Current.GoToAsync("//InventoryManagement"); //routing, follows singleton
     }
+
+    private void ShopClicked(object? sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//ShoppingCart"); //routing, follows singleton
+    }
 }
