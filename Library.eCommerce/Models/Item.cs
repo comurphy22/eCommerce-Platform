@@ -21,7 +21,7 @@ namespace Library.eCommerce.Models
 
         public override string ToString()
         {
-            return $"{Product} Quantity: {Quantity}";
+            return $"{Product.Id}";
         }
 
         public string? Display { 

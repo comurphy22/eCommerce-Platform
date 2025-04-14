@@ -8,6 +8,9 @@
             <Label
                 Text="Inventory Management"
             />
+            <ListView
+                ItemsSource="{Binding Inventory}"
+                />
             <Button
                 Text="Go Back"
                 Clicked="CancelClicked"

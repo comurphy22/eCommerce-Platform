@@ -1,1 +1,0 @@
-xcode-select -p

@@ -12,7 +12,12 @@ namespace Library.eCommerce.Services
     {
         private InventoryServiceProxy()
         {
-            Inventory = new List<Item?>();
+            Inventory = new List<Item?>
+            {
+                new Item{Id = 1, Name = "Product 1"},                 
+                new Item{Id = 2, Name = "Product 2"},
+                new Item{Id = 3, Name = "Product 3"}
+            };
         }
 
         private int LastKey
