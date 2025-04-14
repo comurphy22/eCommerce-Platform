@@ -1,18 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Maui.eCommerce.MainPage">
-
-    <ScrollView>
+             x:Class="Maui.eCommerce.Views.InventoryManagementView">
+    <ContentPage.Content>
         <VerticalStackLayout>
-            <Button
+            <Label
                 Text="Inventory Management"
-                    Clicked="InventoryClicked"
             />
             <Button
-                Text="shop"
+                Text="Go Back"
+                Clicked="CancelClicked"
             />
         </VerticalStackLayout>
-    </ScrollView>
-
+    </ContentPage.Content>
 </ContentPage>
