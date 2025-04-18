@@ -21,13 +21,13 @@ namespace Library.eCommerce.Models
 
         public override string ToString()
         {
-            return $"{Product.Id}";
+            return $"{Id}. {Name} - {Product?.Price}";
         }
 
         public string? Display { 
             get
             {
-                return $"{Product?.Display ?? string.Empty} {Quantity}";
+                return $"{Product?.Display ?? string.Empty} Quantity: {Quantity}";
             }
         }
 

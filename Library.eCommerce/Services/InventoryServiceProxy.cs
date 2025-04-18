@@ -14,9 +14,42 @@ namespace Library.eCommerce.Services
         {
             Inventory = new List<Item?>
             {
-                new Item{Id = 1, Name = "Product 1"},                 
-                new Item{Id = 2, Name = "Product 2"},
-                new Item{Id = 3, Name = "Product 3"}
+                new Item
+                {
+                    Id = 1,
+                    Name = "Product 1",
+                    Product = new Product 
+                    { 
+                        Id = 1, 
+                        Name = "Product 1", 
+                        Price = 19.99m 
+                    },
+                    Quantity = 100
+                },
+                new Item
+                {
+                    Id = 2,
+                    Name = "Product 2",
+                    Product = new Product 
+                    { 
+                        Id = 2, 
+                        Name = "Product 2", 
+                        Price = 29.99m 
+                    },
+                    Quantity = 75
+                },
+                new Item
+                {
+                    Id = 3,
+                    Name = "Product 3",
+                    Product = new Product 
+                    { 
+                        Id = 3, 
+                        Name = "Product 3", 
+                        Price = 39.99m 
+                    },
+                    Quantity = 50
+                }
             };
         }
 

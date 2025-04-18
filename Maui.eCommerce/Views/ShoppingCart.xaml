@@ -8,6 +8,9 @@
             <Label
                 Text="Shopping Cart Management"
             />
+            <ListView
+                ItemsSource="{Binding ShoppingCart}"
+            />
             <Button
                 Text="Go Back"
                 Clicked="CancelClicked"

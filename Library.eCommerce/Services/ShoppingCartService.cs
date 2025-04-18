@@ -28,6 +28,34 @@ namespace Library.eCommerce.Services
         }
         private ShoppingCartService() { //private constructor to prevent external instantiation
             items = new List<Item>();
+            InitializeCart();
+        }
+
+        private void InitializeCart()
+        {
+            // Get some items from inventory
+            var item1 = _invSvc.GetById(1); // Product 1
+            var item2 = _invSvc.GetById(2); // Product 2
+            var item3 = _invSvc.GetById(3); // Product 3
+
+            // Add items to cart
+            if (item1 != null)
+            {
+                AddOrUpdate(item1); // Add 1 unit of Product 1
+                AddOrUpdate(item1); // Add another unit
+            }
+
+            if (item2 != null)
+            {
+                AddOrUpdate(item2); // Add 1 unit of Product 2
+                AddOrUpdate(item2); // Add another unit
+                AddOrUpdate(item2); // Add a third unit
+            }
+
+            if (item3 != null)
+            {
+                AddOrUpdate(item3); // Add 1 unit of Product 3
+            } 
         }
 
         public Item? AddOrUpdate(Item item) //method to add or update item in cart
