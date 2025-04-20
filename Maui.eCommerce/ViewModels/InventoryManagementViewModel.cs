@@ -2,29 +2,46 @@ using Library.eCommerce.Models;
 using Library.eCommerce.Services;
 using Spring2025_Samples.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Maui.eCommerce.ViewModels;
 
-public class InventoryManagementViewModel
+public class InventoryManagementViewModel : INotifyPropertyChanged
 {
     private InventoryServiceProxy _svc = InventoryServiceProxy.Current;
-    public List<Item?> Inventory
+    //InventoryManagementViewModel viewModel = new InventoryManagementViewModel();
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public ObservableCollection<Item?> Inventory
     {
         get
         {
-            return _svc.Inventory;
+            return new ObservableCollection<Item?>(_svc.Inventory);
         }
-        
     }
 
-    public Item? SelectedProduct
-    {
-        get;
-        set;
-    }
+    public Item? SelectedItem { get; set; }
 
     public Item? Delete()
     {
-        return _svc.Delete(SelectedProduct?.Id ?? 0);
+        if (SelectedItem is null)
+        {
+            return null;
+        }
+        
+        var item = _svc.Delete(SelectedItem.Id);
+        NotifyPropertyChanged(nameof(Inventory));
+        return item;
+    }
+
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        if (propertyName is null)
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
+        
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
