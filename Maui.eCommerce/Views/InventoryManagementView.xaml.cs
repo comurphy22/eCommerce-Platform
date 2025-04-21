@@ -15,7 +15,11 @@ public partial class InventoryManagementView : ContentPage
         InitializeComponent();
         BindingContext = new InventoryManagementViewModel();
     }
-    
+
+    private void AddClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//ProductDetails");
+    }
     private void DeleteClicked(object sender, EventArgs e)
     {
         (BindingContext as InventoryManagementViewModel)?.Delete();
@@ -24,4 +28,5 @@ public partial class InventoryManagementView : ContentPage
     {
         Shell.Current.GoToAsync("//MainPage");
     }
+    
 }

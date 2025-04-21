@@ -23,6 +23,10 @@ public class InventoryManagementViewModel : INotifyPropertyChanged
 
     public Item? SelectedItem { get; set; }
 
+    public Item? Add()
+    {
+        return null;
+    }
     public Item? Delete()
     {
         if (SelectedItem is null)
