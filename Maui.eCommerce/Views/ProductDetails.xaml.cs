@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Library.eCommerce.Models;
 using Library.eCommerce.Services;
 using Maui.eCommerce.ViewModels;
+using Spring2025_Samples.Models;
 
 namespace Maui.eCommerce.Views;
 
@@ -24,8 +25,22 @@ public partial class ProductDetails : ContentPage
 
     private void OkClicked(object sender, EventArgs e)
     {
-        var name = (BindingContext as ProductViewModel)?.Name;
-        InventoryServiceProxy.Current.AddOrUpdate(new Item{ Name = name});
+        string name = (BindingContext as ProductViewModel)?.Name;
+        int quantity = (BindingContext as ProductViewModel)?.Quantity ?? 0;
+        decimal price = (BindingContext as ProductViewModel)?.Price ?? 0m;
+
+        var item = new Item
+        {
+            Name = name,
+            Quantity = quantity,
+            Product = new Product
+            {
+                Name = name,
+                Price = price
+            }
+        };
+
+        InventoryServiceProxy.Current.AddOrUpdate(item);
         Shell.Current.GoToAsync("//InventoryManagement");
     }
 }

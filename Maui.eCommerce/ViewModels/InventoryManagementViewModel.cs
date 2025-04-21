@@ -39,6 +39,10 @@ public class InventoryManagementViewModel : INotifyPropertyChanged
         return item;
     }
 
+    public void RefreshProductList()
+    {
+        NotifyPropertyChanged(nameof(Inventory));
+    }
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
     {
         if (propertyName is null)

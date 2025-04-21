@@ -10,6 +10,12 @@
         <Entry
             Text="{Binding Name}"
             />
+        <Label
+            Text="Quantity:"
+        />
+        <Entry
+            Text="{Binding Quantity}"
+        />
         <Button
             Text="Go Back"
             Clicked="GoBackClicked"

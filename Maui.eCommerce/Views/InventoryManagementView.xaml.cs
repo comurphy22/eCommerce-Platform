@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +29,14 @@ public partial class InventoryManagementView : ContentPage
     {
         Shell.Current.GoToAsync("//MainPage");
     }
-    
+
+    private void EditClicked(object? sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//ProductDetails");
+    }
+
+    private void ContentPage_NavigatedTo(object? sender, NavigatedToEventArgs e)
+    {
+        (BindingContext as InventoryManagementViewModel)?.RefreshProductList(); 
+    }
 }
