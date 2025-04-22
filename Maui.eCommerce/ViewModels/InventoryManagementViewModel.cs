@@ -11,12 +11,14 @@ namespace Maui.eCommerce.ViewModels;
 public class InventoryManagementViewModel : INotifyPropertyChanged
 {
     private InventoryServiceProxy _svc = InventoryServiceProxy.Current;
+    public string? Query { get; set; }
     public event PropertyChangedEventHandler? PropertyChanged;
     public ObservableCollection<Item?> Inventory
     {
         get
         {
-            return new ObservableCollection<Item?>(_svc.Inventory);
+            var filteredList = _svc.Inventory.Where(p=>p?.Name?.Contains(Query ?? string.Empty) ?? false);
+            return new ObservableCollection<Item?>(filteredList);
         }
     }
 
@@ -51,4 +53,6 @@ public class InventoryManagementViewModel : INotifyPropertyChanged
         
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    
 }
