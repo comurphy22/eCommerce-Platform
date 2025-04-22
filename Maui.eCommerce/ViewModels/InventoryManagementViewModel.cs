@@ -17,7 +17,7 @@ public class InventoryManagementViewModel : INotifyPropertyChanged
     {
         get
         {
-            var filteredList = _svc.Inventory.Where(p=>p?.Name?.Contains(Query ?? string.Empty) ?? false);
+            var filteredList = _svc.Inventory.Where(p=>p?.Name?.ToLower().Contains(Query?.ToLower() ?? string.Empty) ?? false);
             return new ObservableCollection<Item?>(filteredList);
         }
     }
