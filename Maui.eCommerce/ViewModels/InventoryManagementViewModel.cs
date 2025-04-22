@@ -11,7 +11,6 @@ namespace Maui.eCommerce.ViewModels;
 public class InventoryManagementViewModel : INotifyPropertyChanged
 {
     private InventoryServiceProxy _svc = InventoryServiceProxy.Current;
-    //InventoryManagementViewModel viewModel = new InventoryManagementViewModel();
     public event PropertyChangedEventHandler? PropertyChanged;
     public ObservableCollection<Item?> Inventory
     {
@@ -34,7 +33,7 @@ public class InventoryManagementViewModel : INotifyPropertyChanged
             return null;
         }
         
-        var item = _svc.Delete(SelectedItem.Id);
+        var item = _svc.Delete(SelectedItem?.Id ?? 0);
         NotifyPropertyChanged(nameof(Inventory));
         return item;
     }
