@@ -15,13 +15,14 @@ namespace Library.eCommerce.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public Product Product { get; set; }
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
+        
         //public ICommand? AddCommand { get; set; } UI
 
         public override string ToString()
         {
-            return $"{Id}. {Name} - {Product?.Price}";
+            return $"{Product} Quantity:{Quantity}";
         }
 
         public string? Display { 
@@ -43,7 +44,7 @@ namespace Library.eCommerce.Models
             ShoppingCartService.Current.AddOrUpdate(this);
         }
 
-        public Item(String name, Product product, int quantity)
+        public Item(String name, Product product, int? quantity)
         {
             Name = name;
             Id = product.Id;

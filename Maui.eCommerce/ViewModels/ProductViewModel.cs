@@ -31,12 +31,15 @@ public class ProductViewModel
     
     public int? Quantity
     {
-        get => Model?.Quantity;
+        get
+        {
+            return Model?.Quantity;
+        }
         set
         {
-            if (Model != null && value.HasValue)
+            if (Model != null && value != null && Model.Quantity != value)
             {
-                Model.Quantity = value.Value;
+                Model.Quantity = value;
             }
         }
     }

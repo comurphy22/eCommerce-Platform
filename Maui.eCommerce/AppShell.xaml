@@ -19,7 +19,7 @@
         />
     <ShellContent
         Title="Shop"
-        ContentTemplate="{DataTemplate views:ShoppingCart}"
+        ContentTemplate="{DataTemplate views:ShoppingManagementView}"
         Route="ShoppingCart"
         />
     <ShellContent

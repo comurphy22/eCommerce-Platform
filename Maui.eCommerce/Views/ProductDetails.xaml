@@ -10,13 +10,13 @@
             Text="Name:"
         />
         <Entry
-            Text="{Binding Name, Mode=TwoWay}"
+            Text="{Binding Name}"
             />
         <Label
             Text="Quantity:"
         />
         <Entry
-            Text="{Binding Quantity, Mode=TwoWay}"
+            Text="{Binding Quantity}"
         />
         <Button
             Text="Go Back"

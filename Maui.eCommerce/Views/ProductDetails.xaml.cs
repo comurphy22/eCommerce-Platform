@@ -49,11 +49,11 @@ public partial class ProductDetails : ContentPage
 
     private void ContentPage_NavigatedTo(object? sender, NavigatedToEventArgs e)
     {
-        if (ProductId == 0)
+        if (ProductId == 0) //add
         {
             BindingContext = new ProductViewModel();
         }
-        else
+        else //edit
         {
            BindingContext = new ProductViewModel(InventoryServiceProxy.Current.GetById(ProductId));
         }

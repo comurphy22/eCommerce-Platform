@@ -151,18 +151,18 @@ namespace Library.eCommerce.Services
             Console.WriteLine("Amazon Store");
             Console.WriteLine("----------------------");
     
-            decimal subtotal = 0;
+            decimal? subtotal = 0;
             foreach (var item in CartItems)
             {
-                decimal itemTotal = (item.Product.Price ?? 0) * item.Quantity;
+                decimal? itemTotal = (item.Product.Price ?? 0m) * item.Quantity;
                 subtotal += itemTotal;
         
                 Console.WriteLine($"{item.Name,-20} {item.Quantity,3} @ ${item.Product.Price,6:F2} = ${itemTotal,8:F2}");
             }
 
             decimal taxRate = 0.07m;
-            decimal tax = subtotal * taxRate;
-            decimal total = subtotal + tax;
+            decimal? tax = subtotal * taxRate;
+            decimal? total = subtotal + tax;
 
             Console.WriteLine("----------------------");
             Console.WriteLine($"{"Subtotal:",-20} ${subtotal,8:F2}");
