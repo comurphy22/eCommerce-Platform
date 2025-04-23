@@ -1,10 +1,67 @@
+using Library.eCommerce.Models;
+using Library.eCommerce.Services;
+
 namespace Maui.eCommerce.ViewModels;
 
 public class ProductViewModel
 {
-    public string? Name { get; set; }
+    public Item? Model { get; set; }
+
+    public ProductViewModel()
+    {
+        Model = new Item();
+    }
     
-    public int? Quantity { get; set; }
+    public ProductViewModel(Item? model)
+    {
+        Model = model;
+    }
+
+    public string? Name
+    {
+        get => Model?.Name ?? string.Empty;
+        set
+        {
+            if (Model != null && Model.Name != value)
+            {
+                Model.Name = value;
+            }
+        }
+    }
     
-    public decimal? Price { get; set; }
+    public int? Quantity
+    {
+        get => Model?.Quantity;
+        set
+        {
+            if (Model != null && value.HasValue)
+            {
+                Model.Quantity = value.Value;
+            }
+        }
+    }
+    
+    public decimal? Price
+    {
+        get => Model?.Product?.Price;
+        set
+        {
+            if (Model?.Product != null && value.HasValue)
+            {
+                Model.Product.Price = value.Value;
+            }
+        }
+    }
+    
+    public int Id
+    {
+        get => Model?.Id ?? 0;
+        set
+        {
+            if (Model != null)
+            {
+                Model.Id = value;
+            }
+        }
+    }
 }
