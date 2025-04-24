@@ -12,7 +12,20 @@ public class ShoppingManagementViewModel : INotifyPropertyChanged
     private InventoryServiceProxy _invSvc = InventoryServiceProxy.Current;
     private ItemViewModel _selectedItem;
     private ObservableCollection<ItemViewModel> _inventory;
-
+    private ItemViewModel? _selectedCartItem;
+    public ItemViewModel? SelectedCartItem
+    {
+        get => _selectedCartItem;
+        set
+        {
+            if (_selectedCartItem != value)
+            {
+                _selectedCartItem = value;
+                System.Diagnostics.Debug.WriteLine($"SelectedCartItem changed to: {value?.Model?.Product?.Name ?? "null"}");
+                OnPropertyChanged(nameof(SelectedCartItem));
+            }
+        }
+    }
     public event PropertyChangedEventHandler? PropertyChanged;
     public ItemViewModel SelectedItem
     {
@@ -32,8 +45,7 @@ public class ShoppingManagementViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    public ItemViewModel? SelectedCartItem { get; set; }
+    
     public ObservableCollection<ItemViewModel> Inventory
     {
         get
@@ -54,7 +66,7 @@ public class ShoppingManagementViewModel : INotifyPropertyChanged
         if (SelectedItem != null)
         {
             _cartService.AddOrUpdate(SelectedItem.Model);
-            _shoppingCart = new ObservableCollection<Item>(_cartService.CartItems);
+            _shoppingCart = new ObservableCollection<ItemViewModel>(_cartService.CartItems.Select(item => new ItemViewModel(item)));
             OnPropertyChanged(nameof(ShoppingCart));
         }
     }
@@ -64,14 +76,14 @@ public class ShoppingManagementViewModel : INotifyPropertyChanged
         
     }
     
-    private ObservableCollection<Item> _shoppingCart;
-    public ObservableCollection<Item> ShoppingCart
+    private ObservableCollection<ItemViewModel> _shoppingCart;
+    public ObservableCollection<ItemViewModel> ShoppingCart
     {
         get
         {
             if (_shoppingCart == null)
             {
-                _shoppingCart = new ObservableCollection<Item>(_cartService.CartItems);
+                _shoppingCart = new ObservableCollection<ItemViewModel>(_cartService.CartItems.Select(item => new ItemViewModel(item)));
             }
             return _shoppingCart;
         }
@@ -82,6 +94,16 @@ public class ShoppingManagementViewModel : INotifyPropertyChanged
                 _shoppingCart = value;
                 OnPropertyChanged(nameof(ShoppingCart));
             }
+        }
+    }
+
+    public void ReturnItem()
+    {
+        if (SelectedCartItem != null)
+        {
+            _cartService.ReturnItem(SelectedCartItem.Model);
+            _shoppingCart = new ObservableCollection<ItemViewModel>(_cartService.CartItems.Select(item => new ItemViewModel(item)));
+            OnPropertyChanged(nameof(ShoppingCart));
         }
     }
 }

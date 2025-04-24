@@ -15,7 +15,7 @@ public partial class ShoppingManagementView : ContentPage
 
     private void RemoveFromCartClicked(object sender, EventArgs e)
     {
-        //(BindingContext as ShoppingManagementViewModel).ReturnItem();
+        (BindingContext as ShoppingManagementViewModel).ReturnItem();
     }
 
     private void AddToCartClicked(object sender, EventArgs e)
@@ -26,5 +26,10 @@ public partial class ShoppingManagementView : ContentPage
     private void InlineAddClicked(object sender, EventArgs e)
     {
         //(BindingContext as ShoppingManagementViewModel).RefreshUX();
+    }
+    
+    private void OnBackButtonClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//MainPage");
     }
 }
