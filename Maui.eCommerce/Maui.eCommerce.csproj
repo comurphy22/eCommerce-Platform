@@ -68,8 +68,4 @@
       <ProjectReference Include="..\Library.eCommerce\Library.eCommerce.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="ViewModels\ItemViewModel.cs" />
-    </ItemGroup>
-
 </Project>

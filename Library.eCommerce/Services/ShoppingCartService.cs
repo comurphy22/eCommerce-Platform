@@ -58,28 +58,20 @@ namespace Library.eCommerce.Services
             } 
         }
 
-        public Item? AddOrUpdate(Item item) //method to add or update item in cart
+        public void AddOrUpdate(Item item) //method to add or update item in cart
         {
-            var existingInvItem = _invSvc.GetById(item.Id);
-            if(existingInvItem == null || existingInvItem.Quantity <= 0){  
-                Console.WriteLine("Error: Item not found or out of stock.");
-                return null;
-            }
-            
-            existingInvItem.Quantity--;
-            _invSvc.AddOrUpdate(existingInvItem);
-
             var existingItem = CartItems.FirstOrDefault(i => i.Id == item.Id);
-            if(existingItem == null)
+            if (existingItem == null)
             {
-                var newItem = new Item(item.Name, item.Product, 1);
+                //add
+                var newItem = new Item(item);
+                newItem.Quantity = 1;
                 CartItems.Add(newItem);
-                return newItem;
             }
-            else{
+            else
+            {
                 //update
                 existingItem.Quantity++;
-                return existingItem;
             }
         }
 

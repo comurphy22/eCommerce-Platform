@@ -5,9 +5,6 @@
 
     <ScrollView>
         <VerticalStackLayout>
-            <Label 
-                Text="{Binding Display}"
-                /> 
             <Button
                 Text="Inventory Management"
                     Clicked="InventoryClicked"
@@ -18,5 +15,4 @@
             />
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

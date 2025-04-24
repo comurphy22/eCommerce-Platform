@@ -53,12 +53,9 @@ namespace Library.eCommerce.Models
         }
         public Item(Item i)
         {
-            Product = new Product(i.Product.Id, i.Product.Name, i.Product.Price);
+            Product = new Product(i.Product);
             Quantity = i.Quantity;
             Id = i.Id;
-            //Name = i.Name;
-
-            //AddCommand = new Command(DoAdd);
         }
 
 

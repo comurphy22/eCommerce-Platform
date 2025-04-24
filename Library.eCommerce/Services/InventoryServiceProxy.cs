@@ -96,7 +96,6 @@ namespace Library.eCommerce.Services
                 return null;
             }
             
-            //Console.WriteLine(item.Id);
             if (item.Id == 0) // Assign unique ID for new items
             {   
                 int newId = LastKey + 1;
@@ -111,7 +110,7 @@ namespace Library.eCommerce.Services
                 {
                     var index = Inventory.IndexOf(existingProduct);
                     Inventory.RemoveAt(index);
-                    Inventory.Insert(index, item);
+                    Inventory.Insert(index, new Item(item));
                 }
                 else
                 {
