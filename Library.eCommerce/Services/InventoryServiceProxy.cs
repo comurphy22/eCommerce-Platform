@@ -53,6 +53,13 @@ namespace Library.eCommerce.Services
             };
         }
 
+        public event EventHandler InventoryChanged;
+
+        protected virtual void OnInventoryChanged()
+        {
+            InventoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         private int LastKey
         {
             get
@@ -81,7 +88,6 @@ namespace Library.eCommerce.Services
 
         public List<Item?> Inventory { get; private set; } = new List<Item?>();
 
-
         public Item AddOrUpdate(Item item)
         {
             if (item.Quantity < 0)
@@ -89,19 +95,22 @@ namespace Library.eCommerce.Services
                 Console.WriteLine("Error: Quantity cannot be negative.");
                 return null;
             }
+
             bool isDuplicateName = Inventory.Any(p => p.Name == item.Name && p.Id != item.Id);
-            if (isDuplicateName)    //check for duplicate product names
+            if (isDuplicateName)
             {
                 Console.WriteLine("Duplicate product name in the inventory.");
                 return null;
             }
             
-            if (item.Id == 0) // Assign unique ID for new items
+            bool success = false;
+            if (item.Id == 0)
             {   
                 int newId = LastKey + 1;
                 item.Id = newId;
-                item.Product.Id = newId;    //ensure product id is the same as item id
+                item.Product.Id = newId;
                 Inventory.Add(item);
+                success = true;
             }
             else
             {
@@ -111,12 +120,18 @@ namespace Library.eCommerce.Services
                     var index = Inventory.IndexOf(existingProduct);
                     Inventory.RemoveAt(index);
                     Inventory.Insert(index, new Item(item));
+                    success = true;
                 }
                 else
                 {
                     Console.WriteLine("Product not found.");
                     return null;
                 }
+            }
+
+            if (success)
+            {
+                OnInventoryChanged();
             }
 
             return item;
@@ -130,7 +145,11 @@ namespace Library.eCommerce.Services
             }
 
             Item? item = Inventory.FirstOrDefault(p => p.Id == id);
-            Inventory.Remove(item);
+            if (item != null)
+            {
+                Inventory.Remove(item);
+                OnInventoryChanged();
+            }
 
             return item;
         }
@@ -139,7 +158,5 @@ namespace Library.eCommerce.Services
         {
             return Inventory.FirstOrDefault(p => p.Id == id);
         }
-
     }
-    
 }
