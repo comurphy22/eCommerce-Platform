@@ -1,9 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+<<<<<<< HEAD
     <TargetFramework>net8.0</TargetFramework>
+=======
+    <TargetFrameworks>net9.0;net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+>>>>>>> 03612078f52bbfa5d28146b9a02dc27a8115cbb9
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <Compile Remove="DTO\ProductDTO.cs" />
+  </ItemGroup>
+
+>>>>>>> 03612078f52bbfa5d28146b9a02dc27a8115cbb9
 </Project>

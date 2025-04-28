@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -15,5 +16,35 @@
             />
         <Button Text="Ok" Clicked="OkClicked"/>
         <Button Text="Go Back" Clicked="GoBackClicked"/>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Maui.eCommerce.Views.ProductDetails"
+             NavigatedTo="ContentPage_NavigatedTo"
+             >
+    <VerticalStackLayout>
+        <Label
+            Text="Name:"
+        />
+        <Entry
+            Text="{Binding Name}"
+            />
+        <Label
+            Text="Quantity:"
+        />
+        <Entry
+            Text="{Binding Quantity}"
+        />
+        <Button
+            Text="Go Back"
+            Clicked="GoBackClicked"
+            />
+        <Button
+            Text="Ok"
+            Clicked="OkClicked"
+            />
+>>>>>>> 03612078f52bbfa5d28146b9a02dc27a8115cbb9
     </VerticalStackLayout>
 </ContentPage>

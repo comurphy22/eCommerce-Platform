@@ -5,13 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Maui.eCommerce"
     xmlns:views="clr-namespace:Maui.eCommerce.Views"
+<<<<<<< HEAD
     Shell.FlyoutBehavior="Disabled"
+=======
+    Shell.FlyoutBehavior="Flyout"
+>>>>>>> 03612078f52bbfa5d28146b9a02dc27a8115cbb9
     Title="Maui.eCommerce">
 
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+<<<<<<< HEAD
     <ShellContent
         Title="Inventory"
         ContentTemplate="{DataTemplate views:InventoryManagementView}"
@@ -20,4 +25,22 @@
         Title="Inventory"
         ContentTemplate="{DataTemplate views:ProductDetails}"
         Route="Product" />
+=======
+    <ShellContent 
+        Title="Inventory"
+        ContentTemplate="{DataTemplate views:InventoryManagementView}"
+        Route="InventoryManagement"
+        />
+    <ShellContent
+        Title="Shop"
+        ContentTemplate="{DataTemplate views:ShoppingManagementView}"
+        Route="ShoppingCart"
+        />
+    <ShellContent
+        Title="Add/Edit"
+        ContentTemplate="{DataTemplate views:ProductDetails}"
+        Route="Product"
+        />
+
+>>>>>>> 03612078f52bbfa5d28146b9a02dc27a8115cbb9
 </Shell>
