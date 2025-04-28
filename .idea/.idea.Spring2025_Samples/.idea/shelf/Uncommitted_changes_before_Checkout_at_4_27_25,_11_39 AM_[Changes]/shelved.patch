@@ -1,0 +1,20 @@
+Index: Maui.eCommerce/MainPage.xaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<ContentPage xmlns=\"http://schemas.microsoft.com/dotnet/2021/maui\"\n             xmlns:x=\"http://schemas.microsoft.com/winfx/2009/xaml\"\n             x:Class=\"Maui.eCommerce.MainPage\">\n\n    <ScrollView>\n        <VerticalStackLayout>\n            <Label\n                Text=\"{Binding Display}\"\n                />\n            <Button\n            Text=\"Inventory Management\"\n                Clicked=\"InventoryClicked\"/>\n            <Button\n            Text=\"Shop\"/>\n        </VerticalStackLayout>\n    </ScrollView>\n\n</ContentPage>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Maui.eCommerce/MainPage.xaml b/Maui.eCommerce/MainPage.xaml
+--- a/Maui.eCommerce/MainPage.xaml	(revision c0f08869e07850b9b8060d8a2ecbc98107c975c1)
++++ b/Maui.eCommerce/MainPage.xaml	(date 1745768357816)
+@@ -12,7 +12,8 @@
+             Text="Inventory Management"
+                 Clicked="InventoryClicked"/>
+             <Button
+-            Text="Shop"/>
++            Text="Shop"
++            Clicked=""/>
+         </VerticalStackLayout>
+     </ScrollView>
+ 
